@@ -14,6 +14,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/plugins/dataTables.bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">

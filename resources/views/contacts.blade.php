@@ -8,7 +8,34 @@
                 <div class="panel-heading">Contacts</div>
 
                 <div class="panel-body">
-                    <button class="btn btn-primary" style="margin-bottom: 20px;" v-on:click="showModalForm">New Contact</button>
+
+                    @if (isset($inserts) && $inserts > 0)
+                        <div class="alert alert-success">
+                            Import successful. There are <b>{{ $inserts }}</b> rows inserted to Contacts.
+                        </div>
+                    @endif
+                    @if (isset($duplicates))
+                        <div class="alert alert-danger">
+                            <p><b>There are {{ sizeof($duplicates) }} duplicates found.</b></p>
+                            @foreach ($duplicates as $d)
+                                @if (isset($d['duplicate_of']))
+                                    <p><b>Row {{ $d['row'] }}</b> was not inserted because it is a duplicate of <b>Row {{ $d['duplicate_of'] }}</b></p>
+                                @else
+                                    <p><b>Row {{ $d['row'] }}</b> was not inserted because the phone number {{ $d['phone_no'] }} already exists in the database.</b></p>
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <div style="margin-bottom: 20px">
+                        <button class="btn btn-primary"  v-on:click="showModalForm">New Contact</button>
+                        <form id="importForm" action="{{ route('contacts.import') }}" method="post" enctype="multipart/form-data" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                            <label class="btn btn-default btn-file">
+                                Bulk Import <input type="file" name="file" style="display: none;">
+                            </label>
+                        </form>
+                    </div>
 
                     @if (session('message'))
                         <div class="alert alert-success">
@@ -140,6 +167,17 @@
     });
 
     (function(global, $) {
+        $(document).on('change', ':file', function() {
+            $(':file').on('fileselect', function(event, numFiles, label) {
+                $('#importForm').submit();
+            });
+
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
         (function setupDataTables() {
             dt = $('table').dataTable({
                 "order": [[ 2, "desc" ]],

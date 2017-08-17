@@ -13,7 +13,7 @@ trait ContactsTrait {
         foreach ($contacts as $contact) {
             $result[] = [
                 'id' => $contact->phone_no . '|' .  $contact->name,
-                'text' => $contact->name
+                'text' => $contact->name . " <$contact->phone_no>"
             ];
         }
         return $result;

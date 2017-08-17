@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 class ContactController extends Controller
 {
     use \App\Http\Traits\ContactsTrait;
+    use \App\Http\Traits\SpreadsheetTrait;
 
     public function __construct()
     {
@@ -44,6 +45,12 @@ class ContactController extends Controller
             default :
                 echo json_encode(['success' => false, 'message' => 'Action not found.']);
         }
+    }
+
+    public function import(Request $request)
+    {
+        $result = $this->bulkImport($request->file->getPathName());
+        return view('contacts')->with($result);
     }
 
 }

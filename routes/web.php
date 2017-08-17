@@ -20,3 +20,4 @@ Route::post('/send', 'HomeController@send')->name('send');
 
 Route::get('/contacts', 'ContactController@index')->name('contacts');
 Route::post('/contacts/ajax', 'ContactController@ajax')->name('contacts.ajax');
+Route::post('/contacts/import', 'ContactController@import')->name('contacts.import');
